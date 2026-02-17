@@ -1,1 +1,168 @@
-<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>ID Card Generator</title>\n    <style>\n        body {\n            background: linear-gradient(135deg, #6a11cb, #2575fc);\n            color: white;\n            font-family: Arial, sans-serif;\n            display: flex;\n            justify-content: center;\n            align-items: center;\n            height: 100vh;\n            text-align: center;\n        }\n        #card {\n            border: 2px solid white;\n            border-radius: 10px;\n            width: 300px;\n            padding: 20px;\n            margin-top: 20px;\n            position: relative;\n            overflow: hidden;\n            transition: transform 0.3s;\n        }\n        input {\n            width: 100%;\n            padding: 10px;\n            margin: 10px 0;\n            border: none;\n            border-radius: 5px;\n        }\n        .gradient {\n            background: linear-gradient(45deg, #fc466b, #3f5efb);\n            padding: 10px;\n            border-radius: 5px;\n        }\n        button {\n            padding: 10px 20px;\n            border: none;\n            background-color: #6a11cb;\n            color: white;\n            border-radius: 5px;\n            cursor: pointer;\n            transition: background-color 0.3s;\n        }\n        button:hover {\n            background-color: #2575fc;\n        }\n        #photo-preview {\n            width: 100%;\n            border-radius: 5px;\n            margin-bottom: 10px;\n        }\n    </style>\n</head>\n<body>\n    <div id=\"app\">\n        <h1>ID Card Generator</h1>\n        <input type=\"file\" id=\"photoInput\" accept=\"image/*\">\n        <img id=\"photo-preview\" src=\"\" alt=\"Photo Preview\" style=\"display: none;\">\n        <input type=\"text\" id=\"nameInput\" placeholder=\"Your Name\" required>\n        <input type=\"text\" id=\"serialInput\" placeholder=\"Serial Number\" required>\n        <button id=\"resetButton\">Reset</button>\n        <div id=\"card\" class=\"gradient\">\n            <h2 id=\"namePreview\"></h2>\n            <p>Serial: <span id=\"serialPreview\"></span></p>\n            <canvas id=\"cardCanvas\" width=\"300\" height=\"200\"></canvas>\n        </div>\n        <button id=\"downloadButton\">Download as PNG</button>\n    </div>\n    <script src=\"https://cdn.rawgit.com/szimek/signature_pad/master/dist/signature_pad.umd.js\"></script>\n    <script>\n        const photoInput = document.getElementById(\"photoInput\");\n        const photoPreview = document.getElementById(\"photo-preview\");\n        const nameInput = document.getElementById(\"nameInput\");\n        const serialInput = document.getElementById(\"serialInput\");\n        const namePreview = document.getElementById(\"namePreview\");\n        const serialPreview = document.getElementById(\"serialPreview\");\n        const resetButton = document.getElementById(\"resetButton\");\n        const downloadButton = document.getElementById(\"downloadButton\");\n        const cardCanvas = document.getElementById(\"cardCanvas\");\n\n        function updatePreview() {\n            namePreview.innerText = nameInput.value || 'Your Name';\n            serialPreview.innerText = serialInput.value || 'Serial Number';\n            console.log(\"Preview updated\");\n        }\n\n        photoInput.addEventListener(\"change\", function () {\n            const file = this.files[0];\n            if (file) {\n                const reader = new FileReader();\n                reader.onload = function (e) {\n                    photoPreview.src = e.target.result;\n                    photoPreview.style.display = 'block';\n                };\n                reader.readAsDataURL(file);\n            }\n        });\n\n        nameInput.addEventListener(\"input\", updatePreview);\n        serialInput.addEventListener(\"input\", updatePreview);\n        resetButton.addEventListener(\"click\", function() {\n            nameInput.value = '';\n            serialInput.value = '';\n            photoInput.value = '';\n            photoPreview.src = '';\n            photoPreview.style.display = 'none';\n            updatePreview();\n        });\n\n        downloadButton.addEventListener(\"click\", function() {\n            const ctx = cardCanvas.getContext(\"2d\");\n            ctx.fillStyle = \"white\";\n            ctx.fillRect(0, 0, 300, 200);\n            ctx.drawImage(photoPreview, 10, 10, 70, 70);\n            ctx.fillStyle = \"black\";\n            ctx.font = \"20px Arial\";\n            ctx.fillText(namePreview.innerText, 10, 100);\n            ctx.fillText(serialPreview.innerText, 10, 150);\n            const link = document.createElement(\"a\");\n            link.download = \"ID_Card.png\";\n            link.href = cardCanvas.toDataURL();\n            link.click();\n            console.log(\"Card downloaded as PNG\");\n        });\n\n        // Local Storage Handling\n        window.onload = function() {\n            if (localStorage.getItem(\"serial\")) {\n                serialInput.value = localStorage.getItem(\"serial\");\n                updatePreview();\n            }\n            if (localStorage.getItem(\"name\")) {\n                nameInput.value = localStorage.getItem(\"name\");\n                updatePreview();\n            }\n            photoPreview.src = localStorage.getItem(\"photo\");\n            if (photoPreview.src) {\n                photoPreview.style.display = 'block';\n            }\n        };\n        nameInput.addEventListener(\"input\", function() {\n            localStorage.setItem(\"name\", nameInput.value);\n        });\n        serialInput.addEventListener(\"input\", function() {\n            localStorage.setItem(\"serial\", serialInput.value);\n        });\n        photoInput.addEventListener(\"change\", function() {\n            localStorage.setItem(\"photo\", photoPreview.src);\n        });\n    </script>\n</body>\n</html>\n
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Generator (fixed)</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        #card {
+            border: 2px solid white;
+            border-radius: 10px;
+            width: 300px;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        .gradient {
+            background: linear-gradient(45deg, #fc466b, #3f5efb);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #6a11cb;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2575fc;
+        }
+        #photo-preview {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>ID Card Generator</h1>
+        <input type="file" id="photoInput" accept="image/*">
+        <div style="display:flex; gap:10px; align-items:center; justify-content:center; margin:10px 0;">
+            <img id="photo-preview" src="" alt="Photo Preview" style="display: none;">
+            <div style="flex:1">
+                <input type="text" id="nameInput" placeholder="Your Name" required>
+                <input type="text" id="serialInput" placeholder="Serial Number" required>
+            </div>
+        </div>
+        <div style="display:flex; gap:8px; justify-content:center; margin-bottom:12px;">
+            <button id="resetButton">Reset</button>
+            <button id="downloadButton">Download as PNG</button>
+        </div>
+        <div id="card" class="gradient">
+            <h2 id="namePreview"></h2>
+            <p>Serial: <span id="serialPreview"></span></p>
+            <canvas id="cardCanvas" width="300" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const photoInput = document.getElementById("photoInput");
+        const photoPreview = document.getElementById("photo-preview");
+        const nameInput = document.getElementById("nameInput");
+        const serialInput = document.getElementById("serialInput");
+        const namePreview = document.getElementById("namePreview");
+        const serialPreview = document.getElementById("serialPreview");
+        const resetButton = document.getElementById("resetButton");
+        const downloadButton = document.getElementById("downloadButton");
+        const cardCanvas = document.getElementById("cardCanvas");
+
+        function updatePreview() {
+            namePreview.innerText = nameInput.value || 'Your Name';
+            serialPreview.innerText = serialInput.value || 'Serial Number';
+        }
+
+        photoInput.addEventListener("change", function () {
+            const file = this.files && this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                    try { localStorage.setItem('photo', e.target.result); } catch (e) { }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        nameInput.addEventListener("input", function() { updatePreview(); try { localStorage.setItem('name', nameInput.value); } catch (e) {} });
+        serialInput.addEventListener("input", function() { updatePreview(); try { localStorage.setItem('serial', serialInput.value); } catch (e) {} });
+
+        resetButton.addEventListener("click", function() {
+            nameInput.value = '';
+            serialInput.value = '';
+            photoInput.value = '';
+            photoPreview.src = '';
+            photoPreview.style.display = 'none';
+            try { localStorage.removeItem('name'); localStorage.removeItem('serial'); localStorage.removeItem('photo'); } catch (e) {}
+            updatePreview();
+        });
+
+        downloadButton.addEventListener("click", function() {
+            const ctx = cardCanvas.getContext("2d");
+            ctx.clearRect(0,0,cardCanvas.width, cardCanvas.height);
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, cardCanvas.width, cardCanvas.height);
+
+            function drawTextAndSave() {
+                ctx.fillStyle = "black";
+                ctx.font = "18px Arial";
+                ctx.fillText(namePreview.innerText, 90, 60);
+                ctx.fillText('Serial: ' + serialPreview.innerText, 90, 100);
+                const link = document.createElement('a');
+                link.download = 'ID_Card.png';
+                link.href = cardCanvas.toDataURL('image/png');
+                link.click();
+            }
+
+            if (photoPreview.src) {
+                const img = new Image();
+                img.onload = function() {
+                    ctx.drawImage(img, 10, 10, 70, 70);
+                    drawTextAndSave();
+                };
+                img.onerror = function() { drawTextAndSave(); };
+                img.src = photoPreview.src;
+            } else {
+                drawTextAndSave();
+            }
+        });
+
+        window.addEventListener('load', function() {
+            try {
+                const storedName = localStorage.getItem('name');
+                const storedSerial = localStorage.getItem('serial');
+                const storedPhoto = localStorage.getItem('photo');
+                if (storedName) nameInput.value = storedName;
+                if (storedSerial) serialInput.value = storedSerial;
+                if (storedPhoto) { photoPreview.src = storedPhoto; photoPreview.style.display = 'block'; }
+            } catch (e) { }
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
