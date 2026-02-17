@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Improved Text Handling</title>
+    <title>Dynamic Index</title>
     <style>
         body {
+            max-width: 800px;
+            margin: auto;
             font-family: Arial, sans-serif;
         }
-        .truncated {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%; /* Adjustable max width */
+        .long-name {
+            overflow-wrap: break-word;
+            word-break: break-all;
+            font-size: calc(15px + 0.5vw);
+        }
+        .emoji-text {
+            display: inline-block;
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        #chaos-mode {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="truncated" id="longName">This is an extremely long name that we want to handle correctly to avoid overflow issues in our layout.</div>
+    <h1 class="long-name">Dynamic Index with Long Name Handling 🚀</h1>
+    <div class="emoji-text">Here are some emojis: 😀, 🎉, 🚀</div>
+    <input type="file" id="photo-upload" accept="image/*"/>
+    <div id="qr-code">QR Code Placeholder</div>
+    <div id="serial-number">Serial Number: 1234567890</div>
+    <button onclick="toggleChaosMode()">Toggle Chaos Mode</button>
+    <div id="chaos-mode">
+        <p>Welcome to Chaos Mode!</p>
+    </div>
+    <button onclick="window.print()">Print</button>
     <script>
-        function adjustFontSize() {
-            const element = document.getElementById('longName');
-            const emojiPattern = /[\u{1F600}-\u{1F64F}]/gu; // Emoji regex
-            const widthLimit = 300; // Set a width limit for the element
-
-            if (element.scrollWidth > widthLimit) {
-                // Decrease font size until it fits
-                let fontSize = parseFloat(window.getComputedStyle(element).fontSize);
-                while (element.scrollWidth > widthLimit && fontSize > 10) {
-                    fontSize -= 1;
-                    element.style.fontSize = fontSize + 'px';
-                }
-            }
-
-            // Limit emoji code width
-            const emojis = element.innerHTML.match(emojiPattern);
-            if (emojis) {
-                element.innerHTML = element.innerHTML.replace(emojiPattern, '<span style="font-size: 0.8em;">$&</span>');
-            }
+        function toggleChaosMode() {
+            const chaosMode = document.getElementById('chaos-mode');
+            chaosMode.style.display = chaosMode.style.display === 'none' ? 'block' : 'none';
         }
-
-        window.onload = adjustFontSize;
-        window.onresize = adjustFontSize; // Adjust on window resize
     </script>
 </body>
 </html>
