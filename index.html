@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Secret QT Agent ID Generator</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+}
+
+.controls {
+    margin-bottom: 20px;
+}
+
+input, button {
+    padding: 8px;
+    font-size: 14px;
+    margin: 5px;
+}
+
+button {
+    cursor: pointer;
+}
+
+.card {
+    width: 4in;
+    height: 6in;
+    background: white;
+    border: 3px solid #5A2E8A;
+    border-radius: 20px;
+    margin: auto;
+    padding: 20px;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.chaos {
+    background: linear-gradient(135deg, #ffe6f0, #e6f7ff);
+    border: 4px dashed hotpink;
+}
+
+.watermark {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 38px;
+    opacity: 0.05;
+    white-space: nowrap;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.photo {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #5A2E8A;
+    margin-top: 10px;
+}
+
+.section {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.serial {
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    font-size: 10px;
+}
+
+.qr {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .card, .card * {
+        visibility: visible;
+    }
+    .card {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="controls">
+    <input type="text" id="nameInput" placeholder="Enter Agent Name">
+    <input type="file" id="photoInput" accept="image/*">
+    <button onclick="generateCard()">Generate</button>
+    <button onclick="window.print()">Print</button>
+    <button onclick="toggleChaos()">Cute Chaos Mode</button>
+</div>
+
+<div class="card" id="card">
+    <div class="watermark">SECRET QT CLUB</div>
+    <div class="title">🥰 SECRET QT CLUB 🥰</div>
+
+    <img id="photoPreview" class="photo" src="" style="display:none;">
+
+    <div class="section">
+        <strong>Agent:</strong>
+        <div id="agentName"></div>
+    </div>
+
+    <div class="section">
+        <strong>Code:</strong>
+        <div id="emojiCode"></div>
+    </div>
+
+    <div class="serial" id="serialNumber">
+        Serial: SQTC-0001
+    </div>
+
+    <div class="qr">
+        <canvas id="qrCanvas"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<script>
+let serial = 1;
+let chaosMode = false;
+
+const emojiMap = {
+A:"🐜",B:"🐻",C:"🐱",D:"🐶",
+E:"🦅",F:"🐸",G:"🦒",H:"🏠",
+I:"🍦",J:"🤹",K:"🪁",L:"🦁",
+M:"🌙",N:"📰",O:"🐙",P:"🐼",
+Q:"👑",R:"🌈",S:"☀️",T:"🌳",
+U:"☂️",V:"🎻",W:"🌊",X:"🎄",
+Y:"🧶",Z:"🦓"
+};
+
+function generateCard() {
+
+    let name = document.getElementById("nameInput").value.toUpperCase();
+    document.getElementById("agentName").innerText = name;
+
+    let emojiString = "";
+    for (let i = 0; i*
