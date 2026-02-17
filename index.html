@@ -5,98 +5,264 @@
 <title>Secret QT Agent ID Generator</title>
 
 <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f0f0f0;
-    text-align: center;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
 }
 
-.controls {
-    margin-bottom: 20px;
+.container {
+    width: 100%;
+    max-width: 500px;
 }
 
-input, button {
-    padding: 8px;
+h1 {
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    font-size: 28px;
+}
+
+.controls {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input[type="text"], input[type="file"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 12px 15px;
     font-size: 14px;
-    margin: 5px;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="file"]:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 10px rgba(118, 75, 162, 0.3);
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 button {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#generateBtn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+#generateBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+#printBtn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+}
+
+#printBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+}
+
+#chaosBtn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+#chaosBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+}
+
+.card-container {
+    perspective: 1000px;
 }
 
 .card {
     width: 4in;
     height: 6in;
-    background: white;
-    border: 3px solid #5A2E8A;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+    border: 3px solid #667eea;
     border-radius: 20px;
-    margin: auto;
-    padding: 20px;
+    margin: 0 auto 20px;
+    padding: 25px;
     position: relative;
     box-sizing: border-box;
     overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
 }
 
-.chaos {
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+}
+
+.card.chaos {
     background: linear-gradient(135deg, #ffe6f0, #e6f7ff);
-    border: 4px dashed hotpink;
+    border: 4px dashed #f5576c;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
 }
 
 .watermark {
     position: absolute;
     top: 45%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 38px;
-    opacity: 0.05;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 48px;
+    opacity: 0.08;
     white-space: nowrap;
+    font-weight: bold;
+    color: #667eea;
+    pointer-events: none;
 }
 
 .title {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 22px;
+    color: #667eea;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
 }
 
 .photo {
-    width: 120px;
-    height: 150px;
+    width: 100px;
+    height: 120px;
     object-fit: cover;
     border-radius: 12px;
-    border: 2px solid #5A2E8A;
-    margin-top: 10px;
+    border: 3px solid #667eea;
+    margin: 10px auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .section {
-    margin-top: 10px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #333;
+    text-align: center;
+}
+
+.section strong {
+    color: #764ba2;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.section div {
     font-size: 14px;
+    font-weight: bold;
+    color: #667eea;
+    word-break: break-all;
+    min-height: 20px;
 }
 
 .serial {
     position: absolute;
-    bottom: 10px;
+    bottom: 12px;
     left: 20px;
-    font-size: 10px;
+    font-size: 11px;
+    color: #999;
+    font-weight: bold;
 }
 
 .qr {
     position: absolute;
     bottom: 10px;
-    right: 20px;
+    right: 15px;
+    background: white;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.qr canvas {
+    display: block;
+    width: 60px;
+    height: 60px;
 }
 
 @media print {
-    body * {
-        visibility: hidden;
+    body {
+        background: white;
     }
-    .card, .card * {
-        visibility: visible;
+    body > * {
+        display: none !important;
+    }
+    .card-container {
+        display: block !important;
     }
     .card {
-        position: absolute;
-        left: 0;
-        top: 0;
+        margin: 0 !important;
+        box-shadow: none !important;
+        transform: none !important;
+        page-break-after: always;
+    }
+}
+
+@media (max-width: 600px) {
+    .input-group, .button-group {
+        flex-direction: column;
+    }
+    
+    input[type="text"], input[type="file"], button {
+        width: 100%;
+    }
+    
+    h1 {
+        font-size: 22px;
     }
 }
 </style>
@@ -104,36 +270,46 @@ button {
 
 <body>
 
-<div class="controls">
-    <input type="text" id="nameInput" placeholder="Enter Agent Name">
-    <input type="file" id="photoInput" accept="image/*">
-    <button onclick="generateCard()">Generate</button>
-    <button onclick="window.print()">Print</button>
-    <button onclick="toggleChaos()">Cute Chaos Mode</button>
-</div>
-
-<div class="card" id="card">
-    <div class="watermark">SECRET QT CLUB</div>
-    <div class="title">🥰 SECRET QT CLUB 🥰</div>
-
-    <img id="photoPreview" class="photo" src="" style="display:none;">
-
-    <div class="section">
-        <strong>Agent:</strong>
-        <div id="agentName"></div>
+<div class="container">
+    <h1>🥰 SECRET QT CLUB 🥰</h1>
+    
+    <div class="controls">
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="Enter Agent Name">
+            <input type="file" id="photoInput" accept="image/*">
+        </div>
+        <div class="button-group">
+            <button id="generateBtn" onclick="generateCard()">Generate</button>
+            <button id="printBtn" onclick="window.print()">Print</button>
+            <button id="chaosBtn" onclick="toggleChaos()">Cute Chaos</button>
+        </div>
     </div>
-
-    <div class="section">
-        <strong>Code:</strong>
-        <div id="emojiCode"></div>
-    </div>
-
-    <div class="serial" id="serialNumber">
-        Serial: SQTC-0001
-    </div>
-
-    <div class="qr">
-        <canvas id="qrCanvas"></canvas>
+    
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="watermark">SECRET QT CLUB</div>
+            <div class="title">🥰 QT CARD 🥰</div>
+            
+            <img id="photoPreview" class="photo" src="" alt="Agent Photo">
+            
+            <div class="section">
+                <strong>Agent:</strong>
+                <div id="agentName">---</div>
+            </div>
+            
+            <div class="section">
+                <strong>Code:</strong>
+                <div id="emojiCode">🥰</div>
+            </div>
+            
+            <div class="serial" id="serialNumber">
+                Serial: SQTC-0001
+            </div>
+            
+            <div class="qr">
+                <canvas id="qrCanvas"></canvas>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -144,19 +320,85 @@ let serial = 1;
 let chaosMode = false;
 
 const emojiMap = {
-A:"🐜",B:"🐻",C:"🐱",D:"🐶",
-E:"🦅",F:"🐸",G:"🦒",H:"🏠",
-I:"🍦",J:"🤹",K:"🪁",L:"🦁",
-M:"🌙",N:"📰",O:"🐙",P:"🐼",
-Q:"👑",R:"🌈",S:"☀️",T:"🌳",
-U:"☂️",V:"🎻",W:"🌊",X:"🎄",
-Y:"🧶",Z:"🦓"
+    A:"🐜",B:"🐻",C:"🐱",D:"🐶",
+    E:"🦅",F:"🐸",G:"🦒",H:"🏠",
+    I:"🍦",J:"🤹",K:"🪁",L:"🦁",
+    M:"🌙",N:"📰",O:"🐙",P:"🐼",
+    Q:"👑",R:"🌈",S:"☀️",T:"🌳",
+    U:"☂️",V:"🎻",W:"🌊",X:"🎄",
+    Y:"🧶",Z:"🦓"
 };
 
 function generateCard() {
-
-    let name = document.getElementById("nameInput").value.toUpperCase();
+    let name = document.getElementById("nameInput").value.trim().toUpperCase();
+    
+    if (!name) {
+        alert("Please enter an agent name!");
+        return;
+    }
+    
     document.getElementById("agentName").innerText = name;
-
+    
     let emojiString = "";
-    for (let i = 0; i*
+    for (let i = 0; i < name.length; i++) {
+        let char = name[i];
+        emojiString += emojiMap[char] || "❓";
+    }
+    
+    document.getElementById("emojiCode").innerText = emojiString;
+    document.getElementById("serialNumber").innerText = "Serial: SQTC-" + String(serial).padStart(4, '0');
+    serial++;
+    
+    // Handle photo
+    let photoInput = document.getElementById("photoInput");
+    if (photoInput.files && photoInput.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("photoPreview").src = e.target.result;
+            document.getElementById("photoPreview").style.display = "block";
+        };
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        document.getElementById("photoPreview").style.display = "none";
+    }
+    
+    // Generate QR code
+    let qrData = name + " - SQTC-" + String(serial - 1).padStart(4, '0');
+    let qrCanvas = document.getElementById("qrCanvas");
+    QRCode.toCanvas(qrCanvas, qrData, {
+        width: 80,
+        margin: 0,
+        color: {
+            dark: '#667eea',
+            light: '#ffffff'
+        }
+    }, function(error) {
+        if (error) console.error(error);
+    });
+}
+
+function toggleChaos() {
+    chaosMode = !chaosMode;
+    let card = document.getElementById("card");
+    if (chaosMode) {
+        card.classList.add("chaos");
+    } else {
+        card.classList.remove("chaos");
+    }
+}
+
+// Allow Enter key to generate card
+document.getElementById("nameInput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        generateCard();
+    }
+});
+
+// Initialize with sample data
+window.addEventListener("load", function() {
+    generateCard();
+});
+</script>
+
+</body>
+</html>
