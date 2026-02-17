@@ -1,2 +1,4 @@
-# QT
-I.D card creation tool
+.DS_Store
+node_modules/
+.vscode/
+.env
